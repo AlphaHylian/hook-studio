@@ -22,3 +22,10 @@ To enable it:
    - `OPENROUTER_API_KEY` — your key, set as a **secret**.
 3. Optional: set `OPENROUTER_MODEL` to a specific model id if you'd rather not use the default. It defaults to `openrouter/free`, which automatically routes to whatever free model OpenRouter currently offers — free models rotate over time, so this avoids the app breaking when one gets discontinued.
 4. Redeploy for the environment variable to take effect.
+
+## Legal pages
+
+`privacy.html`, `terms.html`, `cookies.html`, and `refund.html` are general-purpose, plain-language templates (operator: AlphaHylian, contact: ayandabose2021@gmail.com, governing law: Estonia/GDPR baseline) — **not a substitute for legal advice**. Review them yourself, especially:
+
+- The Refund Policy if/when you launch a specific paid plan (it currently covers both subscriptions and one-time credits generically since pricing isn't decided yet).
+- Any of the pages if you register a business entity, target a different country, or start collecting more data than automatic mode currently sends (video concept, goal, platform, hook count — nothing else, no accounts, no analytics, no cookies).

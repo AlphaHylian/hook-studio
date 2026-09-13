@@ -90,6 +90,10 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Video concept is required." }, 400);
   }
 
+  if (payload.consent !== true) {
+    return jsonResponse({ error: "Consent is required to generate hooks." }, 400);
+  }
+
   if (!env.OPENROUTER_API_KEY) {
     return jsonResponse({ error: "Automatic mode isn't configured yet." }, 503);
   }

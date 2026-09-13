@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hook Studio helps you write attention-grabbing opening hooks for social media and video content, manually or with AI assistance." />
   <title>Hook Studio</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,71 +14,104 @@
       <p class="tagline">Attention-grabbing hooks for your social media content.</p>
     </header>
 
-    <nav class="mode-toggle" role="tablist">
-      <button class="mode-btn active" id="tab-manual" role="tab" aria-selected="true">Manual</button>
-      <button class="mode-btn" id="tab-automatic" role="tab" aria-selected="false">Automatic <span class="beta-tag">beta</span></button>
-    </nav>
+    <main>
+      <nav class="mode-toggle" role="tablist" aria-label="Hook creation mode">
+        <button
+          class="mode-btn active"
+          id="tab-manual"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-manual"
+        >Manual</button>
+        <button
+          class="mode-btn"
+          id="tab-automatic"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-automatic"
+          tabindex="-1"
+        >Automatic <span class="beta-tag">beta</span></button>
+      </nav>
 
-    <!-- Manual mode -->
-    <section id="panel-manual" class="panel">
-      <div class="field">
-        <label for="hook-type">Hook type</label>
-        <select id="hook-type"></select>
-        <p class="hint" id="hook-type-bestfor"></p>
-      </div>
+      <!-- Manual mode -->
+      <section id="panel-manual" class="panel" role="tabpanel" aria-labelledby="tab-manual" tabindex="0">
+        <div class="field">
+          <label for="hook-type">Hook type</label>
+          <select id="hook-type"></select>
+          <p class="hint" id="hook-type-bestfor"></p>
+        </div>
 
-      <div id="blanks-container" class="blanks-container"></div>
+        <div id="blanks-container" class="blanks-container"></div>
 
-      <div class="field">
-        <label>Your hook</label>
-        <div class="preview" id="manual-preview"></div>
-        <button class="btn" id="copy-manual">Copy hook</button>
-        <span class="copied-msg" id="copied-manual">Copied!</span>
-      </div>
-    </section>
+        <div class="field">
+          <p class="field-label" id="manual-preview-label">Your hook</p>
+          <div class="preview" id="manual-preview" role="status" aria-labelledby="manual-preview-label"></div>
+          <button class="btn" id="copy-manual" type="button">Copy hook</button>
+          <span class="copied-msg" id="copied-manual" role="status">Copied!</span>
+        </div>
+      </section>
 
-    <!-- Automatic mode -->
-    <section id="panel-automatic" class="panel hidden">
-      <p class="beta-note">Automatic mode is still in beta.</p>
+      <!-- Automatic mode -->
+      <section id="panel-automatic" class="panel hidden" role="tabpanel" aria-labelledby="tab-automatic" tabindex="0">
+        <p class="beta-note">Automatic mode is still in beta.</p>
 
-      <div class="field">
-        <label for="auto-concept">Video concept</label>
-        <textarea id="auto-concept" rows="3" placeholder="e.g. a quick tutorial on batch cooking meals for the week"></textarea>
-      </div>
+        <div class="field">
+          <label for="auto-concept">Video concept</label>
+          <textarea id="auto-concept" rows="3" placeholder="e.g. a quick tutorial on batch cooking meals for the week"></textarea>
+        </div>
 
-      <div class="field">
-        <label for="auto-goal">Goal of the video</label>
-        <select id="auto-goal">
-          <option value="Education">Education</option>
-          <option value="Storytelling">Storytelling</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Inspiration">Inspiration</option>
-          <option value="Promotion">Promotion</option>
-          <option value="Opinion">Opinion</option>
-        </select>
-      </div>
+        <div class="field">
+          <label for="auto-goal">Goal of the video</label>
+          <select id="auto-goal">
+            <option value="Education">Education</option>
+            <option value="Storytelling">Storytelling</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Inspiration">Inspiration</option>
+            <option value="Promotion">Promotion</option>
+            <option value="Opinion">Opinion</option>
+          </select>
+        </div>
 
-      <div class="field">
-        <label for="auto-platform">Platform</label>
-        <select id="auto-platform">
-          <option value="TikTok">TikTok</option>
-          <option value="Instagram Reels">Instagram Reels</option>
-          <option value="YouTube Shorts">YouTube Shorts</option>
-          <option value="YouTube Longform">YouTube Longform</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+        <div class="field">
+          <label for="auto-platform">Platform</label>
+          <select id="auto-platform">
+            <option value="TikTok">TikTok</option>
+            <option value="Instagram Reels">Instagram Reels</option>
+            <option value="YouTube Shorts">YouTube Shorts</option>
+            <option value="YouTube Longform">YouTube Longform</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-      <div class="field">
-        <label for="auto-count">Number of hooks</label>
-        <input type="number" id="auto-count" min="1" max="10" value="5" />
-      </div>
+        <div class="field">
+          <label for="auto-count">Number of hooks</label>
+          <input type="number" id="auto-count" min="1" max="10" value="5" />
+        </div>
 
-      <button class="btn" id="auto-generate">Generate hooks</button>
+        <div class="consent-field">
+          <input type="checkbox" id="auto-consent" />
+          <label for="auto-consent">
+            I understand my video concept is sent to a third-party AI provider to generate hooks, and I won't enter personal or sensitive information. See the <a href="privacy.html">Privacy Policy</a>.
+          </label>
+        </div>
 
-      <div id="auto-status" class="hint"></div>
-      <ul id="auto-results" class="results-list"></ul>
-    </section>
+        <button class="btn" id="auto-generate" type="button" disabled>Generate hooks</button>
+
+        <div id="auto-status" class="hint" role="status" aria-live="polite"></div>
+        <ul id="auto-results" class="results-list"></ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <nav aria-label="Legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="refund.html">Refund Policy</a>
+        <a href="mailto:ayandabose2021@gmail.com">Contact</a>
+      </nav>
+      <p>&copy; 2026 Hook Studio, operated by AlphaHylian.</p>
+    </footer>
   </div>
 
   <script src="app.js"></script>

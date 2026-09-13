@@ -78,12 +78,25 @@ function setMode(mode) {
   tabAutomatic.classList.toggle("active", !isManual);
   tabManual.setAttribute("aria-selected", String(isManual));
   tabAutomatic.setAttribute("aria-selected", String(!isManual));
+  tabManual.tabIndex = isManual ? 0 : -1;
+  tabAutomatic.tabIndex = isManual ? -1 : 0;
   panelManual.classList.toggle("hidden", !isManual);
   panelAutomatic.classList.toggle("hidden", isManual);
 }
 
 tabManual.addEventListener("click", () => setMode("manual"));
 tabAutomatic.addEventListener("click", () => setMode("automatic"));
+
+[tabManual, tabAutomatic].forEach((tab) => {
+  tab.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const other = tab === tabManual ? tabAutomatic : tabManual;
+    other.focus();
+    other.click();
+  });
+});
+
 setMode("manual");
 
 // ---- Manual mode ----
@@ -160,9 +173,14 @@ const autoConcept = document.getElementById("auto-concept");
 const autoGoal = document.getElementById("auto-goal");
 const autoPlatform = document.getElementById("auto-platform");
 const autoCount = document.getElementById("auto-count");
+const autoConsent = document.getElementById("auto-consent");
 const autoGenerateBtn = document.getElementById("auto-generate");
 const autoStatus = document.getElementById("auto-status");
 const autoResults = document.getElementById("auto-results");
+
+autoConsent.addEventListener("change", () => {
+  autoGenerateBtn.disabled = !autoConsent.checked;
+});
 
 function renderHookResults(hooks) {
   autoResults.innerHTML = "";
@@ -172,7 +190,9 @@ function renderHookResults(hooks) {
     span.textContent = hook;
 
     const btn = document.createElement("button");
+    btn.type = "button";
     btn.textContent = "Copy";
+    btn.setAttribute("aria-label", `Copy hook: ${hook}`);
     btn.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(hook);
@@ -197,6 +217,12 @@ autoGenerateBtn.addEventListener("click", async () => {
     return;
   }
 
+  if (!autoConsent.checked) {
+    autoStatus.textContent = "Please check the consent box above first.";
+    autoStatus.classList.add("error-text");
+    return;
+  }
+
   autoStatus.classList.remove("error-text");
   autoStatus.textContent = "Generating...";
   autoResults.innerHTML = "";
@@ -211,6 +237,7 @@ autoGenerateBtn.addEventListener("click", async () => {
         goal: autoGoal.value,
         platform: autoPlatform.value,
         hookCount: Number(autoCount.value) || 5,
+        consent: autoConsent.checked,
       }),
     });
 
@@ -231,6 +258,6 @@ autoGenerateBtn.addEventListener("click", async () => {
     autoStatus.textContent = err.message || "Something went wrong.";
     autoStatus.classList.add("error-text");
   } finally {
-    autoGenerateBtn.disabled = false;
+    autoGenerateBtn.disabled = !autoConsent.checked;
   }
 });
