@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hook Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <h1>Hook Studio</h1>
+      <p class="tagline">Attention-grabbing hooks for your social media content.</p>
+    </header>
+
+    <nav class="mode-toggle" role="tablist">
+      <button class="mode-btn active" id="tab-manual" role="tab" aria-selected="true">Manual</button>
+      <button class="mode-btn" id="tab-automatic" role="tab" aria-selected="false">Automatic <span class="beta-tag">beta</span></button>
+    </nav>
+
+    <!-- Manual mode -->
+    <section id="panel-manual" class="panel">
+      <div class="field">
+        <label for="hook-type">Hook type</label>
+        <select id="hook-type"></select>
+        <p class="hint" id="hook-type-bestfor"></p>
+      </div>
+
+      <div id="blanks-container" class="blanks-container"></div>
+
+      <div class="field">
+        <label>Your hook</label>
+        <div class="preview" id="manual-preview"></div>
+        <button class="btn" id="copy-manual">Copy hook</button>
+        <span class="copied-msg" id="copied-manual">Copied!</span>
+      </div>
+    </section>
+
+    <!-- Automatic mode -->
+    <section id="panel-automatic" class="panel hidden">
+      <p class="beta-note">Automatic mode is still in beta.</p>
+
+      <div class="field">
+        <label for="auto-concept">Video concept</label>
+        <textarea id="auto-concept" rows="3" placeholder="e.g. a quick tutorial on batch cooking meals for the week"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="auto-goal">Goal of the video</label>
+        <select id="auto-goal">
+          <option value="Education">Education</option>
+          <option value="Storytelling">Storytelling</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Inspiration">Inspiration</option>
+          <option value="Promotion">Promotion</option>
+          <option value="Opinion">Opinion</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="auto-platform">Platform</label>
+        <select id="auto-platform">
+          <option value="TikTok">TikTok</option>
+          <option value="Instagram Reels">Instagram Reels</option>
+          <option value="YouTube Shorts">YouTube Shorts</option>
+          <option value="YouTube Longform">YouTube Longform</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="auto-count">Number of hooks</label>
+        <input type="number" id="auto-count" min="1" max="10" value="5" />
+      </div>
+
+      <button class="btn" id="auto-generate">Generate hooks</button>
+
+      <div id="auto-status" class="hint"></div>
+      <ul id="auto-results" class="results-list"></ul>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
