@@ -182,6 +182,9 @@ autoConsent.addEventListener("change", () => {
   autoGenerateBtn.disabled = !autoConsent.checked;
 });
 
+const COPY_ICON_SVG =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+
 function renderHookResults(hooks) {
   autoResults.innerHTML = "";
   hooks.forEach((hook) => {
@@ -191,13 +194,14 @@ function renderHookResults(hooks) {
 
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.textContent = "Copy";
     btn.setAttribute("aria-label", `Copy hook: ${hook}`);
+    btn.innerHTML = COPY_ICON_SVG + '<span class="copy-label">Copy</span>';
+    const label = btn.querySelector(".copy-label");
     btn.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(hook);
-        btn.textContent = "Copied!";
-        setTimeout(() => (btn.textContent = "Copy"), 1500);
+        label.textContent = "Copied!";
+        setTimeout(() => (label.textContent = "Copy"), 1500);
       } catch (err) {
         console.error("Copy failed", err);
       }
