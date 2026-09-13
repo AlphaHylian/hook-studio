@@ -71,8 +71,10 @@ function jsonResponse(body, status = 200) {
   });
 }
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
+async function handleGenerateHooks(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed." }, 405);
+  }
 
   let payload;
   try {
@@ -108,7 +110,6 @@ export async function onRequestPost(context) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": "https://hook-studio.pages.dev",
         "X-Title": "Hook Studio",
       },
       body: JSON.stringify({
@@ -138,3 +139,19 @@ export async function onRequestPost(context) {
 
   return jsonResponse({ hooks });
 }
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/generate-hooks") {
+      return handleGenerateHooks(request, env);
+    }
+
+    if (url.pathname.startsWith("/api/")) {
+      return jsonResponse({ error: "Not found." }, 404);
+    }
+
+    return env.ASSETS.fetch(request);
+  },
+};

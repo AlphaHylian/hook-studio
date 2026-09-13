@@ -5,11 +5,23 @@ A web tool for generating attention-grabbing hooks for social media content.
 - **Manual mode** — pick a hook type, fill in the blanks, copy the result. Fully client-side.
 - **Automatic mode** (beta) — describe your video and let an LLM generate hooks for you.
 
-## Deploying on Cloudflare Pages
+## Project layout
 
-1. In the Cloudflare dashboard, create a new Pages project connected to this GitHub repo.
-2. Build settings: no build command, output directory `/` (this is a static site — Cloudflare will pick up the `functions/` folder automatically for automatic mode's backend).
-3. Deploy.
+- `public/` — the static site (HTML/CSS/JS). Served directly at the edge for any request that matches a file in here.
+- `src/worker.js` — the Worker script. Handles `POST /api/generate-hooks`; everything else falls through to the static assets in `public/`.
+- `wrangler.jsonc` — Workers config: points `main` at the worker script and `assets.directory` at `public/`, with `run_worker_first` set for `/api/*` so those requests always reach the Worker instead of being treated as a (missing) static file.
+
+## Deploying on Cloudflare Workers
+
+**Option A — CLI (from your machine, needs Node 22+):**
+
+```bash
+npx wrangler deploy
+```
+
+Run once, logged into your Cloudflare account (`npx wrangler login` first if needed). Re-run after any change, or set up **Workers Builds** in the Cloudflare dashboard to auto-deploy on every push to this repo instead.
+
+**Option B — Dashboard git integration ("Workers Builds"):** in the Cloudflare dashboard, create a new Worker, connect it to this GitHub repo, and point the build at the repo root — it reads `wrangler.jsonc` automatically.
 
 ## Enabling automatic mode
 
@@ -18,10 +30,17 @@ Automatic mode calls an LLM through [OpenRouter](https://openrouter.ai). Without
 To enable it:
 
 1. Create a free OpenRouter account and generate an API key at [openrouter.ai/keys](https://openrouter.ai/keys) (no credit card required for free-tier models).
-2. In your Cloudflare Pages project settings, add an environment variable:
-   - `OPENROUTER_API_KEY` — your key, set as a **secret**.
-3. Optional: set `OPENROUTER_MODEL` to a specific model id if you'd rather not use the default. It defaults to `openrouter/free`, which automatically routes to whatever free model OpenRouter currently offers — free models rotate over time, so this avoids the app breaking when one gets discontinued.
-4. Redeploy for the environment variable to take effect.
+2. Set it as a secret on the Worker:
+   ```bash
+   npx wrangler secret put OPENROUTER_API_KEY
+   ```
+   (or add it under the Worker's **Settings → Variables and Secrets** in the dashboard, as a secret, not a plain text variable).
+3. Optional: set `OPENROUTER_MODEL` (as a regular variable, in `wrangler.jsonc`'s `vars` or the dashboard) to a specific model id if you'd rather not use the default. It defaults to `openrouter/free`, which automatically routes to whatever free model OpenRouter currently offers — free models rotate over time, so this avoids the app breaking when one gets discontinued.
+4. Redeploy for the secret to take effect if you set it before the first deploy.
+
+## Local development
+
+`npx wrangler dev` (needs Node 22+) runs the full thing locally, Worker included, at `http://localhost:8787`. Use a local `.dev.vars` file (never committed) with `OPENROUTER_API_KEY=...` to test automatic mode locally.
 
 ## Legal pages
 
